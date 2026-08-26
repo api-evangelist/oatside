@@ -1,0 +1,53 @@
+generated: '2026-08-26'
+method: probed
+source: https://shop.oatside.com/.well-known/ucp + response headers on https://shop.oatside.com/api/ucp/mcp
+api: Oatside SG Storefront UCP / MCP
+versioning:
+  scheme: date-based (YYYY-MM-DD) protocol versioning
+  current_version: '2026-04-08'
+  supported_versions:
+  - version: '2026-04-08'
+    status: latest stable
+    profile: https://oatside.myshopify.com/.well-known/ucp/2026-04-08
+  - version: '2026-01-23'
+    status: supported
+    profile: https://oatside.myshopify.com/.well-known/ucp/2026-01-23
+  signalled_in:
+  - location: response header
+    name: x-shopify-ucp-mcp-api-version
+    value: '2026-04-08'
+  - location: /.well-known/ucp
+    field: ucp.supported_versions
+  - location: https://shop.oatside.com/agents.md
+    field: Supported UCP Versions
+  note: >-
+    Two concurrent versions are served from distinct discovery profiles, which is a real
+    version-negotiation surface: an agent can pin a version rather than tracking latest.
+deprecation:
+  policy_published: false
+  sunset_header: false
+  deprecation_header: false
+  evidence: >-
+    No deprecation or sunset policy is published for the storefront agent surface. The
+    supported_versions map shows the previous version 2026-01-23 is still served, but no
+    retirement date, notice period or Sunset/Deprecation header (RFC 8594) was observed.
+  note: >-
+    Protocol version lifecycle is governed upstream at https://ucp.dev and by Shopify, not
+    by Oatside. No Deprecation pointer is emitted.
+status_page:
+  published: false
+  evidence: >-
+    No status.oatside.com, no status page linked from oatside.com, agents.md or the store
+    policies. Platform availability is Shopify's, and Oatside publishes no status surface
+    of its own. No StatusPage pointer is emitted.
+sla:
+  published: false
+support:
+  channel: https://oatside.com/contact-us/
+  email: contact@oatside.com
+  source: https://shop.oatside.com/policies/refund-policy
+changelog:
+  published: false
+  evidence: >-
+    No dated changelog or release notes for the store or its agent surface on any Oatside
+    host. No changelog/ artifact or ChangeLog pointer is emitted.

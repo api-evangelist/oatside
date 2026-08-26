@@ -1,0 +1,63 @@
+generated: '2026-08-26'
+method: probed
+source: https://shop.oatside.com/api/ucp/mcp + https://shop.oatside.com/agents.md
+api: Oatside SG Storefront UCP / MCP
+summary: >-
+  The storefront's agent surface is anonymous at the protocol level — there is no API key,
+  no OAuth flow and no bearer token. Identity is carried instead by a UCP agent profile
+  URI supplied in every tool call, and the money-moving step is gated on a human, not on a
+  credential.
+schemes:
+- id: none
+  type: none
+  applies_to:
+  - tools/list
+  - initialize
+  - GET /.well-known/ucp
+  - GET /products.json
+  - GET /collections/{handle}/products.json
+  evidence: >-
+    Anonymous POST tools/list returned HTTP 200 with the full 13-tool manifest on
+    2026-08-26; no Authorization header was sent.
+- id: ucp-agent-profile
+  type: agent-identity
+  in: body
+  parameter: meta.ucp-agent.profile
+  required: true
+  applies_to:
+  - tools/call (every tool)
+  description: >-
+    Every tool inputSchema declares a required `meta` object containing `ucp-agent.profile`,
+    a URI the server dereferences to identify the calling agent. This is agent identity,
+    not user authentication or authorization.
+  failure_mode:
+    jsonrpc_code: -32001
+    message: UCP discovery failed
+    data_code: invalid_profile_url
+    data_content: 'Unable to fetch agent profile: Missing profile uri'
+  evidence: >-
+    POST tools/call name=search_catalog with empty arguments returned the -32001 /
+    invalid_profile_url error on 2026-08-26.
+- id: buyer-approval
+  type: human-in-the-loop
+  applies_to:
+  - complete_checkout
+  description: >-
+    Payment is authorized by the buyer through a payment handler, not by an agent
+    credential. The provider's agents.md and robots.txt both state that agents must not
+    complete checkout, payment or order placement without explicit, contemporaneous human
+    approval, and point unattended shoppers at the Shop Pay skill instead.
+  payment_handlers:
+  - com.google.pay
+  - dev.shopify.card
+  - dev.shopify.shop_pay
+  source: https://shop.oatside.com/agents.md
+oauth: false
+openid_connect: false
+api_keys: false
+mutual_tls: false
+notes:
+- /.well-known/oauth-authorization-server and /.well-known/oauth-protected-resource
+  return 404 on both hosts — the MCP endpoint publishes no OAuth metadata because it
+  requires none for the tool surface probed.
+- No scopes/ artifact is emitted: there is no OAuth surface, so there is no scope model.

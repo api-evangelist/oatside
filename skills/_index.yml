@@ -1,0 +1,32 @@
+generated: '2026-08-26'
+method: searched
+source: https://shop.oatside.com/agents.md
+skills:
+- file: skills/oatside-shop-agents.md
+  name: Oatside SG storefront agent instructions
+  method: searched
+  source: https://shop.oatside.com/agents.md
+  http_status: 200
+  content_type: text/markdown; charset=utf-8
+  provider_published: true
+  api: Oatside SG Storefront UCP / MCP
+  summary: >-
+    Provider-published AGENTS.md for the Oatside SG Shopify storefront. Saved verbatim,
+    not authored by API Evangelist. Documents the UCP discovery and MCP endpoints, the
+    six-step agent commerce flow (discover, search, cart, checkout, fulfill, complete),
+    supported UCP versions, the read-only browsing surface that needs no authentication,
+    and the buyer-approval invariant on payment.
+  operations:
+  - search_catalog
+  - create_cart
+  - create_checkout
+  - update_checkout
+  - complete_checkout
+  mirrors:
+  - url: https://shop.oatside.com/llms.txt
+    status: 200
+    note: Byte-identical agent instructions also served at /llms.txt on the store host.
+notes:
+- No API-Evangelist-authored skills were generated. There is no OpenAPI to ground
+  operationIds in, and the provider already publishes its own agent instructions, which
+  is the stronger artifact.

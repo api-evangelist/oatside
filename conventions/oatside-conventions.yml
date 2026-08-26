@@ -1,0 +1,108 @@
+generated: '2026-08-26'
+method: probed
+source: https://shop.oatside.com/api/ucp/mcp, https://shop.oatside.com/agents.md, https://shop.oatside.com/policies/refund-policy
+api: Oatside SG Storefront UCP / MCP
+protocol:
+  style: JSON-RPC 2.0 over HTTP POST (Model Context Protocol)
+  content_type: application/json
+  accept: application/json, text/event-stream
+  mcp_protocol_version: '2024-11-05'
+  ucp_api_version: '2026-04-08'
+authentication:
+  style: anonymous transport + required UCP agent profile URI
+  detail: authentication/oatside-authentication.yml
+money:
+  representation: >-
+    Integer minor units paired with an ISO 4217 currency code, e.g.
+    {"amount": 600, "currency": "USD"} is $6.00. Documented in the description of every
+    price-bearing tool.
+  zero_decimal_note: Zero-decimal currencies such as JPY are already whole units.
+identifiers:
+  style: Shopify global IDs
+  example: gid://shopify/Checkout/abc123
+  note: Documented in the get_checkout / update_checkout inputSchema id descriptions.
+buyer_context:
+  parameters:
+  - context.address_country
+  - context.currency
+  note: agents.md instructs agents to pass buyer context for accurate pricing and availability.
+idempotency:
+  supported: false
+  evidence: >-
+    No Idempotency-Key header, no idempotency_key parameter and no request-token field
+    appears in any of the 13 tool inputSchemas, and neither agents.md nor the UCP merchant
+    profile documents one.
+  mitigation: >-
+    Safety on repeated writes is instead structural: cart and checkout are addressable
+    resources created once and then updated by id, so a retried create_cart yields a new
+    cart rather than a duplicate order, and only complete_checkout is terminal — and that
+    one requires human approval.
+  status: absent
+pagination:
+  supported: unknown
+  evidence: >-
+    search_catalog and lookup_catalog inputSchemas were captured verbatim in
+    mcp/oatside-ucp-mcp-tools.json; no cursor/page/limit convention is documented in
+    agents.md.
+tracing:
+  request_id_header: x-request-id
+  evidence: Observed on the live MCP response on 2026-08-26.
+versioning:
+  header: x-shopify-ucp-mcp-api-version
+  current: '2026-04-08'
+  detail: lifecycle/oatside-lifecycle.yml
+errors:
+  envelope: JSON-RPC 2.0 error object with a UCP-specific data.code
+  detail: errors/oatside-problem-types.yml
+rate_limits:
+  detail: rate-limits/oatside-rate-limits.yml
+dry_run_mode:
+  supported: false
+  note: >-
+    No dry-run/preview flag in any tool schema. The closest equivalent is that
+    create_checkout and update_checkout return full totals, taxes and discounts before
+    complete_checkout is called, so an agent can quote a final price without committing.
+reversibility:
+  status: verified
+  summary: >-
+    Both pre-purchase write surfaces have an explicit reversal tool, and the post-purchase
+    return path has a published window.
+  surfaces:
+  - surface: cart
+    write_operations:
+    - create_cart
+    - update_cart
+    reversal_operation: cancel_cart
+    window: >-
+      Not stated. No expiry for a cart is published in agents.md, the UCP profile or the
+      tool descriptions.
+    grade: documented
+    source: https://shop.oatside.com/api/ucp/mcp
+  - surface: checkout
+    write_operations:
+    - create_checkout
+    - update_checkout
+    reversal_operation: cancel_checkout
+    window: >-
+      Not stated. cancel_checkout is available before complete_checkout; no time limit is
+      published.
+    grade: documented
+    source: https://shop.oatside.com/api/ucp/mcp
+  - surface: order
+    write_operations:
+    - complete_checkout
+    reversal_operation: none via API
+    window: >-
+      "returns and exchange requests have to be made within 7 days from the day the order
+      is received" (merchandise). Food and beverage products are returnable or
+      exchangeable only for damaged items or incorrect orders, reviewed case by case,
+      with no time window stated.
+    process: >-
+      Out of band — email contact@oatside.com with the order number and photos. There is no
+      refund, void or reverse tool in the MCP manifest, so an agent cannot undo a completed
+      order programmatically.
+    grade: verified
+    source: https://shop.oatside.com/policies/refund-policy
+  caveat: >-
+    The 7-day window is a merchandise return policy, not an API-level reversal guarantee.
+    An agent must treat complete_checkout as terminal and irreversible through the API.

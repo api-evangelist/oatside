@@ -1,0 +1,27 @@
+generated: '2026-08-26'
+method: searched
+source: https://oatside.com/llms.txt
+files:
+- file: llms/oatside-llms.txt
+  url: https://oatside.com/llms.txt
+  http_status: 200
+  content_type: text/plain; charset=utf-8
+  bytes: 1694
+  verbatim: true
+  generator: Rank Math SEO (WordPress plugin)
+  note: >-
+    A marketing/SEO llms.txt, not a developer one — it indexes the brand site's pages and
+    product pages for LLM crawlers. Genuinely served by the provider at its own apex host.
+- file: skills/oatside-shop-agents.md
+  url: https://shop.oatside.com/llms.txt
+  http_status: 200
+  content_type: text/markdown; charset=utf-8
+  bytes: 4304
+  verbatim: true
+  note: >-
+    The store host serves a DIFFERENT and far more substantive llms.txt — the Shopify
+    agent instructions, byte-equivalent to https://shop.oatside.com/agents.md. Saved once,
+    under skills/, since it is the provider-published AGENTS.md.
+probes:
+- url: https://oatside.com/llms-full.txt
+  status: 404

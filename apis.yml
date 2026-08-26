@@ -1,18 +1,80 @@
 aid: oatside
 name: Oatside
-description: 'Oatside is a company surfaced via the API Evangelist harvest backlog (source: secondary-market)
-  and added to the network as a stub for full-pipeline profiling.'
+description: >-
+  Oatside is a Southeast Asian oat milk brand founded in Singapore in 2020 by Benedict Lim,
+  operating as one of Asia's only "full-stack" plant-milk companies — it controls sourcing,
+  R&D and manufacturing from its own facility in Java, Indonesia, using Australian oats.
+  Its barista-oriented range (Barista Blend, Espresso Roast, Caffe Latte, Chocolate,
+  Chocolate Malt, Matcha, Caramel Macchiato) is sold through independent cafes and retail
+  across Singapore, Hong Kong, Indonesia, Vietnam, Thailand, Cambodia, the Philippines,
+  Malaysia, Taiwan, India, the Middle East and Australia. Oatside is a consumer packaged
+  goods company and publishes no developer program, but its direct-to-consumer Shopify
+  storefront exposes a live, anonymous, agent-callable commerce surface: a Universal
+  Commerce Protocol (UCP) merchant profile and an MCP endpoint serving 13 catalog, cart
+  and checkout tools, plus a published agents.md and llms.txt.
 url: https://raw.githubusercontent.com/api-evangelist/oatside/refs/heads/main/apis.yml
 x-type: company
 x-source: harvest:secondary-market
-x-tier: stub
-x-tier-reason: harvest
 specificationVersion: '0.20'
 created: '2026-08-26'
 modified: '2026-08-26'
+image: https://oatside.com/wp-content/uploads/2026/07/oatside-og-image.png
 tags:
 - Company
-apis: []
+- Food and Beverage
+- Consumer Packaged Goods
+- Oat Milk
+- Plant Based
+- E-Commerce
+- Agentic Commerce
+- Universal Commerce Protocol
+- Model Context Protocol
+- Shopify
+- Retail
+- Singapore
+- Southeast Asia
+apis:
+- name: Oatside SG Storefront UCP / MCP
+  description: >-
+    The agent-facing commerce surface of Oatside's Singapore direct-to-consumer storefront.
+    Implements the Universal Commerce Protocol (UCP) 2026-04-08 over MCP: an anonymous
+    tools/list returns 13 tools covering catalog search and lookup, product detail, cart
+    create/update/cancel, checkout create/get/update/complete/cancel, and order retrieval.
+    The protocol implementation is provided by the Shopify platform and scoped to Oatside's
+    own merchant tenant (merchant "Oatside SG", shop_id 57430966333) — Oatside did not
+    author the protocol, but the endpoint, catalog, policies and commerce relationship
+    are Oatside's and are served from a host Oatside controls.
+  humanURL: https://shop.oatside.com/agents.md
+  baseURL: https://shop.oatside.com/api/ucp/mcp
+  tags:
+  - Commerce
+  - Agentic Commerce
+  - MCP
+  - UCP
+  - Catalog
+  - Cart
+  - Checkout
+  properties:
+  - type: MCPServer
+    url: mcp/oatside-mcp.yml
+  - type: Documentation
+    url: https://shop.oatside.com/agents.md
+  - type: AgentSkill
+    url: skills/_index.yml
+  - type: Authentication
+    url: authentication/oatside-authentication.yml
+  - type: Conventions
+    url: conventions/oatside-conventions.yml
+  - type: RateLimits
+    url: rate-limits/oatside-rate-limits.yml
+  - type: Conformance
+    url: conformance/oatside-conformance.yml
+  - type: DataModel
+    url: data-model/oatside-data-model.yml
+  - type: ErrorCatalog
+    url: errors/oatside-problem-types.yml
+  - type: Lifecycle
+    url: lifecycle/oatside-lifecycle.yml
 maintainers:
 - FN: Kin Lane
   email: kin@apievangelist.com
@@ -20,4 +82,29 @@ maintainers:
   email: info@apis.io
 common:
 - type: Website
-  url: https://www.nasdaqprivatemarket.com/
+  url: https://oatside.com/
+- type: Documentation
+  url: https://shop.oatside.com/agents.md
+- type: LLMsTxt
+  url: llms/oatside-llms.txt
+- type: WellKnown
+  url: well-known/oatside-well-known.yml
+- type: TermsOfService
+  url: https://oatside.com/terms-of-use/
+- type: PrivacyPolicy
+  url: https://oatside.com/privacy-policy/
+- type: Support
+  url: https://oatside.com/contact-us/
+- type: Blog
+  url: https://oatside.com/the-oatside-of-life/
+- type: Pricing
+  url: https://shop.oatside.com/
+- type: Plans
+  url: plans/oatside-plans-pricing.yml
+- type: DomainSecurity
+  url: security/oatside-domain-security.yml
+x-enrichment:
+  date: '2026-08-26'
+  status: enriched
+  artifacts_added: 17
+  pass: local-v1

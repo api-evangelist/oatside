@@ -1,0 +1,40 @@
+generated: '2026-08-26'
+method: probed
+source: live JSON-RPC error responses from https://shop.oatside.com/api/ucp/mcp
+api: Oatside SG Storefront UCP / MCP
+format: jsonrpc-2.0
+rfc9457: false
+envelope:
+  shape: '{"jsonrpc":"2.0","id":<id>,"error":{"code":<int>,"message":<string>,"data":{"code":<string>,"content":<string>,"continue_url":<url>}}}'
+  fields:
+  - name: error.code
+    description: JSON-RPC integer code. -32001 observed for UCP server errors.
+  - name: error.message
+    description: Human-readable summary, e.g. "UCP discovery failed".
+  - name: error.data.code
+    description: UCP-specific machine-readable slug, e.g. invalid_profile_url.
+  - name: error.data.content
+    description: Detail string explaining the failure.
+  - name: error.data.continue_url
+    description: >-
+      A storefront URL an agent can hand to a human to continue out of band. This is the
+      notable agent-readiness property of the envelope — the error carries a human fallback.
+problem_types:
+- code: -32001
+  data_code: invalid_profile_url
+  title: UCP discovery failed
+  detail: 'Unable to fetch agent profile: Missing profile uri'
+  cause: >-
+    A tools/call was made without a resolvable meta.ucp-agent.profile URI, or with one the
+    server could not dereference.
+  remediation: >-
+    Supply meta.ucp-agent.profile as a fetchable URI describing the calling agent, then retry.
+  observed: '2026-08-26'
+  evidence: >-
+    Returned for both an unknown JSON-RPC method and a tools/call with empty arguments,
+    which indicates agent-profile discovery is evaluated before method dispatch.
+coverage_note: >-
+  Only the error classes reachable anonymously were probed. Cart, checkout, payment and
+  fulfillment error codes require an accepted agent profile and a live cart, which this
+  pipeline does not create — probing them would mean transacting against a real storefront.
+  Those codes are defined by the UCP schemas referenced in well-known/oatside-ucp.json.

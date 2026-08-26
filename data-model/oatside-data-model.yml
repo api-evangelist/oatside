@@ -1,0 +1,85 @@
+generated: '2026-08-26'
+method: derived
+source: mcp/oatside-ucp-mcp-tools.json (13 tool inputSchemas) + well-known/oatside-ucp.json
+api: Oatside SG Storefront UCP / MCP
+note: >-
+  Derived from the MCP tool surface and the UCP capability declaration, not from an
+  OpenAPI — Oatside publishes none. Entities are those the tools address directly and the
+  capabilities the merchant profile registers. Field-level detail beyond the tool schemas
+  lives in the UCP schemas referenced in well-known/oatside-ucp.json.
+identifier_scheme:
+  style: Shopify global ID URIs
+  pattern: gid://shopify/{Type}/{id}
+  example: gid://shopify/Checkout/abc123
+entities:
+- name: Product
+  tools:
+  - search_catalog
+  - lookup_catalog
+  - get_product
+  capability: dev.ucp.shopping.catalog.search, dev.ucp.shopping.catalog.lookup
+  description: A sellable item in the Oatside SG catalog. Addressable by identifier or handle.
+- name: Variant
+  tools:
+  - lookup_catalog
+  description: A purchasable variation of a Product; lookup_catalog resolves products or variants by identifier.
+- name: Cart
+  tools:
+  - create_cart
+  - get_cart
+  - update_cart
+  - cancel_cart
+  capability: dev.ucp.shopping.cart
+  description: A mutable, cancellable collection of line items held before checkout.
+- name: Checkout
+  tools:
+  - create_checkout
+  - get_checkout
+  - update_checkout
+  - complete_checkout
+  - cancel_checkout
+  capability: dev.ucp.shopping.checkout
+  description: >-
+    The purchase transaction. Carries line items, totals, taxes, discounts, shipping
+    address and method. Terminal on complete_checkout, which requires buyer approval.
+- name: Order
+  tools:
+  - get_order
+  capability: dev.ucp.shopping.order
+  description: The record produced by a completed checkout. Read-only over the API.
+- name: Money
+  description: Value object; {amount, currency} with amount in ISO 4217 minor units.
+- name: AgentProfile
+  description: >-
+    The calling agent's identity, passed as meta.ucp-agent.profile on every tool call and
+    dereferenced by the server.
+relationships:
+- from: Cart
+  to: Product
+  type: has_many
+  via: line items
+- from: Checkout
+  to: Cart
+  type: belongs_to
+  via: cart contents promoted to checkout
+- from: Checkout
+  to: Money
+  type: has_many
+  via: totals, taxes, discounts
+- from: Order
+  to: Checkout
+  type: belongs_to
+  via: complete_checkout returns order ID
+- from: Checkout
+  to: Fulfillment
+  type: has_one
+  via: dev.ucp.shopping.fulfillment (shipping only, single destination)
+- from: Checkout
+  to: Discount
+  type: has_many
+  via: dev.ucp.shopping.discount
+fulfillment_constraints:
+  allows_multi_destination_shipping: false
+  allowed_method_combinations:
+  - - shipping
+  source: well-known/oatside-ucp.json (dev.ucp.shopping.fulfillment config)

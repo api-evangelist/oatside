@@ -1,0 +1,100 @@
+generated: '2026-08-26'
+method: probed
+source: https://shop.oatside.com/api/ucp/mcp (JSON-RPC tools/list, HTTP 200, anonymous)
+name: Oatside SG Storefront UCP/MCP Server
+status: live
+ownership_note: >-
+  The MCP server is provided by the Shopify platform (Universal Commerce Protocol native
+  support) and is scoped to Oatside's own merchant tenant — the UCP profile names merchant
+  "Oatside SG", merchant_origin shop.oatside.com and shop_id 57430966333, and the tools
+  operate on Oatside's catalog, carts and orders. Oatside did not author the protocol or
+  the server implementation; it enabled it on a host it controls. Recorded as Oatside's
+  agent surface, not as Oatside-authored engineering.
+deployment:
+  mode: remote
+  endpoint: https://shop.oatside.com/api/ucp/mcp
+  auth: none
+  verified: probed
+server_info:
+  name: universal-commerce
+  version: 0.1.0
+  mcp_protocol_version: '2024-11-05'
+  ucp_api_version: '2026-04-08'
+  capabilities:
+    tools:
+      listChanged: true
+    prompts:
+      listChanged: true
+    resources:
+      listChanged: true
+    logging: {}
+alternate_endpoints:
+- url: https://oatside.myshopify.com/api/ucp/mcp
+  note: Canonical myshopify tenant host named in /.well-known/ucp; returns an identical tools/list.
+discovery:
+- url: https://shop.oatside.com/.well-known/ucp
+  status: 200
+  note: UCP merchant profile — services, capabilities, payment handlers.
+- url: https://shop.oatside.com/agents.md
+  status: 200
+  note: Provider-published agent instructions naming both endpoints.
+- url: https://shop.oatside.com/robots.txt
+  status: 200
+  note: robots.txt advertises the UCP discovery and MCP endpoint in comments.
+tools_manifest: mcp/oatside-ucp-mcp-tools.json
+tool_count: 13
+tools:
+- name: search_catalog
+  category: catalog
+  description: Search for products from the online store, hosted on Shopify.
+- name: lookup_catalog
+  category: catalog
+  description: Look up multiple products or variants by identifier.
+- name: get_product
+  category: catalog
+  description: Retrieve complete product detail by identifier. Returns a singular product.
+- name: create_cart
+  category: cart
+  description: Creates a new cart.
+- name: get_cart
+  category: cart
+  description: Get the cart contents.
+- name: update_cart
+  category: cart
+  description: Perform updates to a cart.
+- name: cancel_cart
+  category: cart
+  description: Cancels a cart.
+- name: create_checkout
+  category: checkout
+  description: Creates a checkout. Returns checkout details, line items, totals, discounts and taxes.
+- name: get_checkout
+  category: checkout
+  description: Returns details about the checkout, including line items, totals, discounts and taxes.
+- name: update_checkout
+  category: checkout
+  description: Updates a checkout.
+- name: complete_checkout
+  category: checkout
+  description: Completes a checkout. Returns order ID, Thank You Page URL, or errors. Requires buyer approval.
+- name: cancel_checkout
+  category: checkout
+  description: Cancels a checkout.
+- name: get_order
+  category: order
+  description: Get the details of an order.
+notes:
+- Every tool inputSchema requires meta.ucp-agent.profile — a URI identifying the calling
+  agent. tools/list is anonymous, but tools/call without a resolvable agent profile returns
+  JSON-RPC error -32001 / invalid_profile_url.
+- Prices are integers in ISO 4217 minor units paired with a currency code.
+- The provider's own agents.md forbids unattended payment completion; complete_checkout
+  requires contemporaneous human buyer approval.
+x-evidence:
+  fetched: '2026-08-26'
+  url: https://shop.oatside.com/api/ucp/mcp
+  method: POST tools/list
+  http_status: 200
+  content_type: application/json; charset=utf-8
+  response_headers:
+    x-shopify-ucp-mcp-api-version: '2026-04-08'

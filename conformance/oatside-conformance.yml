@@ -1,0 +1,88 @@
+generated: '2026-08-26'
+method: probed
+source: https://shop.oatside.com/.well-known/ucp + https://shop.oatside.com/api/ucp/mcp
+api: Oatside SG Storefront UCP / MCP
+standards:
+- id: mcp
+  name: Model Context Protocol
+  conforms: true
+  version: '2024-11-05'
+  evidence: >-
+    initialize returned protocolVersion 2024-11-05 with serverInfo
+    {name: universal-commerce, version: 0.1.0} and tools/prompts/resources/logging
+    capabilities; tools/list returned 13 tools each carrying a JSON Schema inputSchema.
+  source: https://shop.oatside.com/api/ucp/mcp
+- id: json-rpc-2.0
+  name: JSON-RPC 2.0
+  conforms: true
+  evidence: All responses carry jsonrpc "2.0", the echoed id, and a result or error member.
+  source: https://shop.oatside.com/api/ucp/mcp
+- id: json-schema-2020-12
+  name: JSON Schema draft 2020-12
+  conforms: true
+  evidence: >-
+    Every tool inputSchema declares
+    "$schema": "https://json-schema.org/draft/2020-12/schema".
+  source: mcp/oatside-ucp-mcp-tools.json
+- id: iso-4217
+  name: ISO 4217 currency codes
+  conforms: true
+  evidence: >-
+    Monetary values are {amount, currency} pairs in minor units with ISO 4217 codes,
+    documented in every price-bearing tool description.
+  source: mcp/oatside-ucp-mcp-tools.json
+- id: rfc9457
+  name: RFC 9457 Problem Details
+  conforms: false
+  evidence: Errors use the JSON-RPC error envelope, not application/problem+json.
+- id: oauth2
+  name: OAuth 2.0
+  conforms: false
+  evidence: >-
+    /.well-known/oauth-authorization-server and /.well-known/oauth-protected-resource
+    return 404 on both hosts; the surface is anonymous.
+domain_standard:
+  id: ucp
+  name: Universal Commerce Protocol
+  conforms: true
+  version: '2026-04-08'
+  supported_versions:
+  - '2026-04-08'
+  - '2026-01-23'
+  declared_in_contract: true
+  evidence: >-
+    The contract declares the standard for its own market at
+    https://shop.oatside.com/.well-known/ucp — a UCP merchant profile whose `ucp.version`
+    is 2026-04-08 and whose `services` block registers dev.ucp.shopping with
+    transport "mcp", endpoint https://oatside.myshopify.com/api/ucp/mcp and schema
+    https://ucp.dev/2026-04-08/services/shopping/mcp.openrpc.json. The live MCP endpoint
+    confirms it at runtime with the response header
+    x-shopify-ucp-mcp-api-version: 2026-04-08.
+  capabilities_declared:
+  - dev.ucp.shopping.checkout
+  - dev.ucp.shopping.cart
+  - dev.ucp.shopping.order
+  - dev.ucp.shopping.fulfillment
+  - dev.ucp.shopping.discount
+  - dev.ucp.shopping.catalog.search
+  - dev.ucp.shopping.catalog.lookup
+  payment_handlers_declared:
+  - id: com.google.pay
+    version: '2026-01-11'
+  - id: dev.shopify.card
+    version: '2026-01-15'
+  - id: dev.shopify.shop_pay
+    version: '2026-04-08'
+  market_note: >-
+    UCP is the emerging agentic-commerce interoperability standard for retail. A merchant
+    speaking it can be transacted with by any UCP-capable shopping agent without a bespoke
+    connector; a merchant that does not requires a bilateral integration or screen scraping.
+  attribution_note: >-
+    Conformance is inherited from the Shopify platform, which implements UCP natively for
+    its stores. It is real and callable at Oatside's host, but it is a platform capability
+    Oatside enabled rather than one Oatside built.
+compliance_certifications: []
+compliance_note: >-
+  No trust center, SOC 2 / ISO 27001 / PCI attestation or compliance page was found on any
+  Oatside host; probe-security-programs.py returned vdp=none trust=none. No Compliance
+  pointer is emitted.

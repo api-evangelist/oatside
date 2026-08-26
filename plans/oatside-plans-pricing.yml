@@ -1,0 +1,24 @@
+generated: '2026-08-26'
+method: searched
+source: https://shop.oatside.com/ and https://shop.oatside.com/products.json
+plan_count: 0
+plans: []
+note: >-
+  Oatside publishes no API plans, tiers, quotas or developer pricing. It is a consumer
+  packaged goods company; the only pricing it publishes is retail product pricing on its
+  direct-to-consumer Shopify storefront, where oat milk cartons and subscription cases are
+  sold to shoppers. The agent-facing UCP/MCP surface is free to call and unmetered as far
+  as any published document states — it exists to sell the physical product, not as a
+  metered API product.
+commercial_model:
+  type: consumer-commerce
+  storefront: https://shop.oatside.com/
+  machine_readable_catalog:
+    url: https://sg.oatside.com/products.json
+    status: 200
+    note: >-
+      Shopify's standard anonymous product JSON feed; real product and price data, including
+      subscription case SKUs. Not an API product — a storefront data endpoint.
+  regions_sold: >-
+    Singapore, Hong Kong, Indonesia, Vietnam, Thailand, Cambodia, the Philippines,
+    Malaysia, Taiwan, India, the Middle East, Australia.
