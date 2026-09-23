@@ -24,12 +24,11 @@ hosts:
   documents:
   - path: /.well-known/ucp
     status: 200
-    file: well-known/oatside-ucp.json
-    note: >-
-      Universal Commerce Protocol merchant profile, version 2026-04-08. Declares the
-      dev.ucp.shopping service over MCP transport, the checkout/cart/fulfillment/discount/
-      order/catalog capabilities, and three payment handlers (Google Pay, Shopify card,
-      Shop Pay). This is the one served well-known document across both hosts.
+    file: oatside-ucp.json
+    note: Universal Commerce Protocol merchant profile, version 2026-04-08. Declares the dev.ucp.shopping
+      service over MCP transport, the checkout/cart/fulfillment/discount/ order/catalog capabilities,
+      and three payment handlers (Google Pay, Shopify card, Shop Pay). This is the one served well-known
+      document across both hosts.
   - path: /.well-known/security.txt
     status: 404
   - path: /.well-known/api-catalog
