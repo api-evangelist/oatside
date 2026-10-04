@@ -122,6 +122,9 @@ apis:
     url: errors/oatside-problem-types.yml
   - type: Lifecycle
     url: lifecycle/oatside-lifecycle.yml
+  x-surface: platform-generated
+  x-platform: shopify
+  x-platform-surface: ucp
 maintainers:
 - FN: Kin Lane
   email: kin@apievangelist.com
